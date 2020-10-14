@@ -1,0 +1,97 @@
+section#entete {
+    text-align: center;
+}
+
+/* Notre espace de jeu
+Note: tout élément (par exemple article.carte) sera précédé de
+`section#principale` dans le CSS final.
+*/
+section#principale {
+    width: 700px;
+    margin: 0 auto;
+
+    /* La carte à jouer */
+    article.carte {
+        display: inline-block;
+        height: 100px;
+        width: 100px;
+        background: { // ce bloc est utilisé comme préfixe pour les propriétés
+            image: url("cards.png"); // on aura background-image
+            repeat: no-repeat; // ici background-repeat
+        }
+    }
+
+    /* On décompose l'image cards.png pour extraire chaque fruit */
+    article#image1 {
+        background-position: 0 0px;
+    }
+
+    article#image2 {
+        background-position: 0 -100px;
+    }
+
+    article#image3 {
+        background-position: 0 -200px;
+    }
+
+    article#image4 {
+        background-position: 0 -300px;
+    }
+
+    article#image5 {
+        background-position: 0 -400px;
+    }
+
+    article#image6 {
+        background-position: 0 -500px;
+    }
+
+    article#image7 {
+        background-position: 0 -600px;
+    }
+
+    article#image8 {
+        background-position: 0 -700px;
+    }
+
+    article#image9 {
+        background-position: 0 -800px;
+    }
+
+    article#image10 {
+        background-position: 0 -900px;
+    }
+
+    article#image11 {
+        background-position: 0 -1000px;
+    }
+
+    article#image12 {
+        background-position: 0 -1100px;
+    }
+
+    article#image13 {
+        background-position: 0 -1200px;
+    }
+
+    article#image14 {
+        background-position: 0 -1300px;
+    }
+
+    article#image15 {
+        background-position: 0 -1400px;
+    }
+
+    article#image16 {
+        background-position: 0 -1500px;
+    }
+
+    article#image17 {
+        background-position: 0 -1600px;
+    }
+
+    article#image18 {
+        background-position: 0 -1700px;
+    }
+
+}
