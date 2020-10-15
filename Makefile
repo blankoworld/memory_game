@@ -1,5 +1,5 @@
 memory.css:
-	@sassc memory.scss > $@
+	@sassc style.scss -t expanded > $@
 
 clean:
 	@rm -f memory.css
