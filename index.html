@@ -7,6 +7,17 @@
 
 	<!-- Feuille de style à utiliser pour la mise en forme -->
 	<link rel="stylesheet" href="memory.css">
+
+	<!-- Utilisation d'un site externe pour inclure Jquery.
+		Notez le `defer` qui indique de charger tout ça à la fin du chargement
+		complet de la page. -->
+	<script
+		src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+		crossorigin="anonymous" defer></script>
+	<!-- Puis nous utilisons notre propre fichier JS pour le code de 
+		l'application -->
+	<script src="memory.js" defer></script>
 </head>
 <body>
 
@@ -19,26 +30,8 @@
 
 	<!-- Notre section principale de travail : pour le tableau des scores, ou
 		encore pour le plateau de jeu.
-		On affiche les 18 images de fruits que nous avons -->
+		Notre code Javascript ajoutera les cartes de jeu. -->
 	<section id="principale">
-		<article id="image1" class="carte"></article>
-		<article id="image2" class="carte"></article>
-		<article id="image3" class="carte"></article>
-		<article id="image4" class="carte"></article>
-		<article id="image5" class="carte"></article>
-		<article id="image6" class="carte"></article>
-		<article id="image7" class="carte"></article>
-		<article id="image8" class="carte"></article>
-		<article id="image9" class="carte"></article>
-		<article id="image10" class="carte"></article>
-		<article id="image11" class="carte"></article>
-		<article id="image12" class="carte"></article>
-		<article id="image13" class="carte"></article>
-		<article id="image14" class="carte"></article>
-		<article id="image15" class="carte"></article>
-		<article id="image16" class="carte"></article>
-		<article id="image17" class="carte"></article>
-		<article id="image18" class="carte"></article>
 	</section>
 
 </body>
