@@ -12,12 +12,17 @@ immédiat. Nul besoin d'utiliser une quelconque fonction de Javascript.
 
 // Quelques variables utiles pour configurer notre application
 const nbreCases = 28;   // nombre de cases du plateau de jeu
-const maxImages = 18;      // nombre maximum d'images dont nous disposons
+const maxImages = 18;   // nombre maximum d'images dont nous disposons
+const delaiAffichage = 1.5; // secondes d'affichage des cartes
+const faceInitiale = "verso"; // `recto` ou `verso`
 
 // TODO: Erreur si nbreCases modulo 2 renvoie 0 => signifie nombre pair.
 // TODO: Erreur si nbreCases supérieur à 18*2 (maxImages)
 
+// Variables disponibles à toute l'application et permettant son fonctionnement
 var nbreDouble = nbreCases / 2; // nombre de doubles à avoir.
+var plateau = [];               // numéro des fruits utilisés pour le plateau
+var pioche = [];                // cartes piochées par le joueur
 
 // Fonctions utiles
 /* 
@@ -38,6 +43,7 @@ function melanger(tableau) {
         tableau[i] = temp;
     }
 
+    // renvoi du tableau résultant
     return tableau;
 }
 
@@ -89,17 +95,99 @@ function generePlateau() {
     // On affiche dans la console du navigateur Web le résultat
     console.log("Cartes disponibles, en pagaille : ", chiffres);
 
-    // On utilise que les 14 premières.
+    // On utilise seulement les 14 premières.
     retenus = chiffres.slice(0, nbreDouble);
     
     // Avons-nous juste ? On affiche le résultat
     console.log("14 cartes choisies : ", retenus)
 
     // On double le tableau avant de mélanger
+    /*
+        La fonction concat permet de « concatener » des éléments, c'est à
+        dire d'ajouter un à plusieurs éléments après un autre.
+    */
     resultat = retenus.concat(retenus);
 
     // On retourne le résultat mélangé
     return melanger(resultat);
+}
+
+/*
+retourner : change les propriétés de la carte pour qu'elle change recto/verso
+*/
+function retourner(caseId) {
+    console.log("Doit retourner : ", caseId);
+    let element = $("article#" + caseId);
+    // TODO: si recto, faire verso et inversement
+    if (element.hasClass("recto")) {
+        element.removeClass("recto");
+        element.addClass("verso");
+    } else {
+        element.removeClass("verso");
+        element.addClass("recto");
+    }
+}
+
+/*
+cartesEgales : compare les cartes de la pioche.
+- si les cartes sont identiques on les laisse affichées (aucun traitement)
+- si différentes on retourne à nouveau les cartes
+*/
+function cartesEgales() {
+    /*
+    On a seulement le numéro des cases comme référence (1 à 28).
+    Le numéro du fruit attaché se trouve dans le tableau `plateau`, à la même
+    place que le numéro de la case.
+    Par exemple la case 0 a le fruit `plateau[0]`.
+    */
+    let case1 = pioche[0];
+    let case2 = pioche[1];
+    let fruit1 = plateau[case1];
+    let fruit2 = plateau[case2];
+    if (fruit1 != fruit2) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/*
+jouer : actions entreprises après que le joueur ait choisi une carte.
+Chaque tour il choisit une carte, une deuxième puis on compare.
+Si une carte est jouée, nous ne faisons rien de plus.
+Si deux cartes sont jouées : on compare les deux.
+*/
+function jouer(event) {
+    let elementChoisi = event.delegateTarget;
+    // Sélection de l'identifiant de la carte (numéro de la case du plateau)
+    let numeroCase = event.target.id;
+    console.log("Case choisie : ", numeroCase);
+
+    // On ajoute la carte à la pioche (pour comparaison ultérieure)
+    pioche.push(numeroCase);
+
+    // On retourne la carte
+    retourner(numeroCase);
+
+    // On compare seulement si nous avons 2 cartes.
+    if (pioche.length > 1) {
+        // Pour laisser l'utilisateur voir la seconde carte avant de comparer.
+        if (cartesEgales()) {
+            // TODO: incrémenter le nombre de paires de réussites
+            /* TODO: vérifier si on a tout trouvé avant le temps imparti. Si
+            on arrive à nbreDouble, c'est gagné !
+            */
+        } else {
+            /* Échec du tour de jeu : on laisse les cartes visibles quelques
+            secondes, puis on les retourne.
+            */
+            let attente = delaiAffichage * 1000;
+            setTimeout(retourner, attente, pioche[0]);
+            setTimeout(retourner, attente, pioche[1]);
+        };
+        // La comparaison terminée, on réinitialise la pioche.
+        pioche = [];
+    }
 }
 
 /*
@@ -110,13 +198,19 @@ $(function() {
     /*
     Objectif : générer le plateau de jeu ; 28 cartes.
     */
-    let plateau = generePlateau();
+    plateau = generePlateau();
 
-    // On génère le plateau avec les images retenues
+    // On génère le plateau en HTML avec les images retenues pour les cartes
     for(let iterateur = 0; iterateur < plateau.length; iterateur++) {
-        $("<article>", {
-            "id": "image" + (plateau[iterateur]),
-            "class": "carte"
-        }).appendTo("section#principale")
+        let image = "recto" + plateau[iterateur];
+        // création de la carte
+        let carte = $("<article>", {
+            "id": iterateur,
+            "class": "carte ".concat(faceInitiale, " ", image)
+        })
+        // ajout d'un évènement sur la carte
+        carte.on("click", jouer);
+        // ajout de la carte sur le plateau
+        carte.appendTo("section#principale");
     };
 });
