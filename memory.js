@@ -24,6 +24,7 @@ const dureePartie = 3;       // durée, en minutes, de la partie
 var nbreDouble = nbreCases / 2; // nombre de doubles à avoir.
 var plateau = [];               // numéro des fruits utilisés pour le plateau
 var pioche = [];                // cartes piochées par le joueur
+var nbreReussites = 0;              // nombre de doubles trouvés par le joueur
 
 // Fonctions utiles
 /* 
@@ -119,7 +120,6 @@ retourner : change les propriétés de la carte pour qu'elle change recto/verso
 function retourner(caseId) {
     console.log("Doit retourner : ", caseId);
     let element = $("article#" + caseId);
-    // TODO: si recto, faire verso et inversement
     if (element.hasClass("recto")) {
         element.removeClass("recto");
         element.addClass("verso");
@@ -173,10 +173,15 @@ function jouer(event) {
     if (pioche.length > 1) {
         // Pour laisser l'utilisateur voir la seconde carte avant de comparer.
         if (cartesEgales()) {
-            // TODO: incrémenter le nombre de paires de réussites
-            /* TODO: vérifier si on a tout trouvé avant le temps imparti. Si
-            on arrive à nbreDouble, c'est gagné !
-            */
+            nbreReussites++;
+            if (nbreReussites >= nbreDouble) {
+                // TODO: créer une méthode pour ce moment (et les actions):
+                // - arrêter le chronomètre
+                // - enlever les "onclick" partout
+                // - arrêter le setTimeout de fin de partie
+                // alert(unescape(encodeURIComponent("Vous avez GAGNÉ !")));
+                alert("Vous avez GAGN\xC9 !");
+            }
            // TODO : enlever l'évènement "onclick" des deux cartes.
         } else {
             /* Échec du tour de jeu : on laisse les cartes visibles quelques
