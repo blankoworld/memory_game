@@ -11,10 +11,11 @@ immédiat. Nul besoin d'utiliser une quelconque fonction de Javascript.
 */
 
 // Quelques variables utiles pour configurer notre application
-const nbreCases = 28;   // nombre de cases du plateau de jeu
-const maxImages = 18;   // nombre maximum d'images dont nous disposons
-const delaiAffichage = 1.5; // secondes d'affichage des cartes
-const faceInitiale = "verso"; // `recto` ou `verso`
+const nbreCases = 28;           // nombre de cases du plateau de jeu
+const maxImages = 18;           // nombre maximum d'images dont nous disposons
+const delaiAffichage = 1.5;     // secondes d'affichage des cartes
+const faceInitiale = "verso";   // `recto` ou `verso`
+const dureePartie = 3;       // durée, en minutes, de la partie
 
 // TODO: Erreur si nbreCases modulo 2 renvoie 0 => signifie nombre pair.
 // TODO: Erreur si nbreCases supérieur à 18*2 (maxImages)
@@ -158,7 +159,6 @@ Si une carte est jouée, nous ne faisons rien de plus.
 Si deux cartes sont jouées : on compare les deux.
 */
 function jouer(event) {
-    let elementChoisi = event.delegateTarget;
     // Sélection de l'identifiant de la carte (numéro de la case du plateau)
     let numeroCase = event.target.id;
     console.log("Case choisie : ", numeroCase);
@@ -177,6 +177,7 @@ function jouer(event) {
             /* TODO: vérifier si on a tout trouvé avant le temps imparti. Si
             on arrive à nbreDouble, c'est gagné !
             */
+           // TODO : enlever l'évènement "onclick" des deux cartes.
         } else {
             /* Échec du tour de jeu : on laisse les cartes visibles quelques
             secondes, puis on les retourne.
@@ -191,12 +192,71 @@ function jouer(event) {
 }
 
 /*
+afficheChronometre : affiche le chronomètre de la partie.
+*/
+function afficheChronometre() {
+    // affichage initial du chronomètre
+    let progression = $("<progress>", {
+        "class": "barreProgression",
+        max: 100,
+        value: 0,
+    });
+    progression.appendTo("section#partie");
+}
+
+/*
+augmenteCompteur : augmente le compteur de 1 à 1
+*/
+var augmenteCompteur = (function() {
+    let compteur = 0;
+    return function() { compteur += 1; return compteur; };
+})();
+
+/*
+demarreChronometre : initialise le chronomètre pour la partie.
+On doit prévoir la fin du jeu : il faut créer une alerte au joueur !
+Mais également de créer un événement qui met à jour la barre de progression
+régulièrement.
+*/
+function demarreChronometre() {
+    // TODO : garder la date de début de partie (pour les scores)
+    let nbreSecondes = dureePartie * 60; // nombre de secondes pour la partie
+    let dureeMilliemes = nbreSecondes * 1000; // durée de la partie
+
+    // Dans X minutes (variable dureePartie) le jeu s'arrête
+    setTimeout(function() {
+        // Au cas où l'intervalle de mise à jour est trop grand
+        $("section#partie progress.barreProgression").attr(
+            "value", 100);
+        // Suppression de l'intervalle de rafraîchissement de la progression
+        clearInterval(deroulementPartie);
+        alert('Vous avez perduuuuuu !')
+        // TODO: reset du plateau entier (ou simplement revenir aux scores)
+    }, dureeMilliemes)
+
+    /*
+    En fonction de la durée du jeu, il n'est pas nécessaire de faire avancer
+    la barre de progression toutes les secondes.
+    Si on estime une partie de 5 min, soit 300 secondes (5 × 60), il est
+    acceptable de mettre à jour la barre de progression toutes les 3 secondes.
+    Si la partie dure 1 min, soit 120 secondes, toutes les 1.2 secondes irait.
+    setInterval prend des millièmes, donc on multiplie par 1000.
+    */
+    let calculNonSavantMaisSavonneux = nbreSecondes / 100 * 1000;
+    // mise à jour dudit chronomètre
+    let deroulementPartie = setInterval(function() {
+        $("section#partie progress.barreProgression").attr(
+            "value", augmenteCompteur);
+    }, calculNonSavantMaisSavonneux)
+}
+
+/*
 Nous utilisons ainsi une fonction anonyme (sans nom), exécutée au chargement
 de ce script
 */
 $(function() {
     /*
-    Objectif : générer le plateau de jeu ; 28 cartes.
+    Objectif : générer le plateau de jeu ; 28 cartes. Ajouter un chronomètre.
     */
     plateau = generePlateau();
 
@@ -213,4 +273,9 @@ $(function() {
         // ajout de la carte sur le plateau
         carte.appendTo("section#principale");
     };
+
+    // On affiche un chronomètre
+    afficheChronometre();
+    // On débute la partie avec le chronomètre
+    demarreChronometre();
 });

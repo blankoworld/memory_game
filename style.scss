@@ -106,3 +106,14 @@ section#principale {
     }
 
 }
+
+// Espace pour informer de la progression de la partie
+section#partie {
+    text-align: center;
+
+    progress.barreProgression {
+        height: 1.5em;
+        width: 721px;
+        background-color: gray;
+    }
+}
