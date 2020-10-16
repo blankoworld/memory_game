@@ -7,7 +7,7 @@ Note: tout élément (par exemple article.carte) sera précédé de
 `section#principale` dans le CSS final.
 */
 section#principale {
-    width: 750px;
+    width: 760px;
     margin: 0 auto;
 
     /* La carte à jouer */
@@ -15,7 +15,15 @@ section#principale {
         display: inline-block;
         height: 100px;
         width: 100px;
-        margin-left: 3px;
+        margin-left: 8px;
+        /* On arrondi les bords :) */
+        -moz-border-radius: 10px;       // mozilla
+        border-radius: 10px;            // `normal`
+        -webkit-border-radius: 10px;    // basés sur Webkit
+        /* Quelqu'un me fait de l'ombre ? */
+        -moz-box-shadow: 1px 1px 3px #000000;   // pour mozilla
+        box-shadow: 1px 1px 3px #000000;        // navigateurs `normaux`
+        -webkit-box-shadow: 1px 1px 3px #000000;// basés sur webkit
     }
 
     article.recto {
