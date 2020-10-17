@@ -26,6 +26,7 @@ var plateau = [];               // numéro des fruits utilisés pour le plateau
 var pioche = [];                // cartes piochées par le joueur
 var nbreReussites = 0;          // nombre de doubles trouvés par le joueur
 var deroulementPartie = null;   // outil de rafraîchissement de la prograssion
+var alerteFin = null;           // indicateur lorsque la partie est terminée
 
 // Fonctions utiles
 /* 
@@ -163,6 +164,23 @@ function desactiverCarte(caseId) {
 }
 
 /*
+finPartie : Actions à entreprendre quand la partie se termine : 
+- désactivation de toutes les cartes (suppression du onClick)
+- arrêt du chronomètre
+- message pour alerter de la fin de partie (si gagné ou perdu)
+*/
+function finPartie(message) {
+    // Désactivation de toutes les cartes
+    for(let iterateur = 0; iterateur < plateau.length; iterateur++) {
+        desactiverCarte(iterateur);
+    };
+    // Suppression de l'intervalle de rafraîchissement de la progression
+    clearInterval(deroulementPartie);
+    // Information à l'utilisateur
+    alert(message);
+}
+
+/*
 jouer : actions entreprises après que le joueur ait choisi une carte.
 Chaque tour il choisit une carte, une deuxième puis on compare.
 Si une carte est jouée, nous ne faisons rien de plus.
@@ -185,13 +203,9 @@ function jouer(event) {
         if (cartesEgales()) {
             nbreReussites++;
             if (nbreReussites >= nbreDouble) {
-                // TODO: créer une méthode pour ce moment (et les actions):
-                // - arrêter le chronomètre
-                // - enlever les "onclick" partout
-                // - arrêter le setTimeout de fin de partie
-                // alert(unescape(encodeURIComponent("Vous avez GAGNÉ !")));
-                clearInterval(deroulementPartie);
-                alert("Vous avez GAGN\xC9 !");
+                finPartie("Vous avez GAGN\xC9 !");
+                // Arrêter le setTimeout de fin de partie
+                clearTimeout(alerteFin);
             }
             pioche.forEach(caseId => desactiverCarte(caseId));
         } else {
@@ -240,14 +254,11 @@ function demarreChronometre() {
     let dureeMilliemes = nbreSecondes * 1000; // durée de la partie
 
     // Dans X minutes (variable dureePartie) le jeu s'arrête
-    setTimeout(function() {
+    alerteFin = setTimeout(function() {
         // Au cas où l'intervalle de mise à jour est trop grand
         $("section#partie progress.barreProgression").attr(
             "value", 100);
-        // Suppression de l'intervalle de rafraîchissement de la progression
-        clearInterval(deroulementPartie);
-        alert('Vous avez perduuuuuu !')
-        // TODO: reset du plateau entier (ou simplement revenir aux scores)
+        finPartie('Vous avez perduuu !');
     }, dureeMilliemes)
 
     /*
