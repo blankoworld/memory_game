@@ -120,12 +120,13 @@ retourner : change les propriétés de la carte pour qu'elle change recto/verso
 function retourner(caseId) {
     console.log("Doit retourner : ", caseId);
     let element = $("article#" + caseId);
+    let image = "recto" + plateau[caseId];
     if (element.hasClass("recto")) {
-        element.removeClass("recto");
+        element.removeClass("recto " + image);
         element.addClass("verso");
     } else {
         element.removeClass("verso");
-        element.addClass("recto");
+        element.addClass("recto " + image);
     }
 }
 
@@ -267,11 +268,10 @@ $(function() {
 
     // On génère le plateau en HTML avec les images retenues pour les cartes
     for(let iterateur = 0; iterateur < plateau.length; iterateur++) {
-        let image = "recto" + plateau[iterateur];
         // création de la carte
         let carte = $("<article>", {
             "id": iterateur,
-            "class": "carte ".concat(faceInitiale, " ", image)
+            "class": "carte ".concat(faceInitiale)
         })
         // ajout d'un évènement sur la carte
         carte.on("click", jouer);
