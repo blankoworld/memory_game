@@ -24,7 +24,8 @@ const dureePartie = 3;       // durée, en minutes, de la partie
 var nbreDouble = nbreCases / 2; // nombre de doubles à avoir.
 var plateau = [];               // numéro des fruits utilisés pour le plateau
 var pioche = [];                // cartes piochées par le joueur
-var nbreReussites = 0;              // nombre de doubles trouvés par le joueur
+var nbreReussites = 0;          // nombre de doubles trouvés par le joueur
+var deroulementPartie = null;   // outil de rafraîchissement de la prograssion
 
 // Fonctions utiles
 /* 
@@ -189,6 +190,7 @@ function jouer(event) {
                 // - enlever les "onclick" partout
                 // - arrêter le setTimeout de fin de partie
                 // alert(unescape(encodeURIComponent("Vous avez GAGNÉ !")));
+                clearInterval(deroulementPartie);
                 alert("Vous avez GAGN\xC9 !");
             }
             pioche.forEach(caseId => desactiverCarte(caseId));
@@ -254,11 +256,15 @@ function demarreChronometre() {
     Si on estime une partie de 5 min, soit 300 secondes (5 × 60), il est
     acceptable de mettre à jour la barre de progression toutes les 3 secondes.
     Si la partie dure 1 min, soit 120 secondes, toutes les 1.2 secondes irait.
+
     setInterval prend des millièmes, donc on multiplie par 1000.
     */
     let calculNonSavantMaisSavonneux = nbreSecondes / 100 * 1000;
-    // mise à jour dudit chronomètre
-    let deroulementPartie = setInterval(function() {
+    /* 
+    Mise à jour dudit chronomètre. NB : utilisation d'une variable globale
+    pour permettre de supprimer l'intervalle plus tard.
+    */
+    deroulementPartie = setInterval(function() {
         $("section#partie progress.barreProgression").attr(
             "value", augmenteCompteur);
     }, calculNonSavantMaisSavonneux)
