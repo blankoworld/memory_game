@@ -27,6 +27,7 @@ var pioche = [];                // cartes piochées par le joueur
 var nbreReussites = 0;          // nombre de doubles trouvés par le joueur
 var deroulementPartie = null;   // outil de rafraîchissement de la prograssion
 var alerteFin = null;           // indicateur lorsque la partie est terminée
+var scoresPartie = [];          // Garder en mémoire les infos de la partie
 
 // Fonctions utiles
 /* 
@@ -176,6 +177,8 @@ function finPartie(message) {
     };
     // Suppression de l'intervalle de rafraîchissement de la progression
     clearInterval(deroulementPartie);
+    // Affichage des scores en console pour utilisation ultérieure
+    console.log("Scores partie : ", scoresPartie);
     // Information à l'utilisateur
     alert(message);
 }
@@ -203,9 +206,12 @@ function jouer(event) {
         if (cartesEgales()) {
             nbreReussites++;
             if (nbreReussites >= nbreDouble) {
-                finPartie("Vous avez GAGN\xC9 !");
+                // Ajout du temps de fin de partie au tableau des scores
+                scoresPartie.push(new Date());
                 // Arrêter le setTimeout de fin de partie
                 clearTimeout(alerteFin);
+                // La partie se termine par une victoire !
+                finPartie("Vous avez GAGN\xC9 !");
             }
             pioche.forEach(caseId => desactiverCarte(caseId));
         } else {
@@ -249,7 +255,8 @@ Mais également de créer un événement qui met à jour la barre de progression
 régulièrement.
 */
 function demarreChronometre() {
-    // TODO : garder la date de début de partie (pour les scores)
+    // Ajout de la date de début de partie aux scores/infos de la partie.
+    scoresPartie.push(new Date());
     let nbreSecondes = dureePartie * 60; // nombre de secondes pour la partie
     let dureeMilliemes = nbreSecondes * 1000; // durée de la partie
 
