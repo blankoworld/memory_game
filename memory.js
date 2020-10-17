@@ -154,6 +154,14 @@ function cartesEgales() {
 }
 
 /*
+desactiverCarte : enlève l'événement `onclick` de la case donnée.
+*/
+function desactiverCarte(caseId) {
+    let element = $("article#" + caseId);
+    element.off("click", jouer);
+}
+
+/*
 jouer : actions entreprises après que le joueur ait choisi une carte.
 Chaque tour il choisit une carte, une deuxième puis on compare.
 Si une carte est jouée, nous ne faisons rien de plus.
@@ -183,7 +191,7 @@ function jouer(event) {
                 // alert(unescape(encodeURIComponent("Vous avez GAGNÉ !")));
                 alert("Vous avez GAGN\xC9 !");
             }
-           // TODO : enlever l'évènement "onclick" des deux cartes.
+            pioche.forEach(caseId => desactiverCarte(caseId));
         } else {
             /* Échec du tour de jeu : on laisse les cartes visibles quelques
             secondes, puis on les retourne.
