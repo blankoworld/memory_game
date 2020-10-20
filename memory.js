@@ -53,6 +53,13 @@ function melanger(tableau) {
 }
 
 /*
+transformeDate : transforme les dates en un format compatible avec notre application
+*/
+function transformeDate(laDate) {
+    return laDate.toISOString().substring(0, 19).replace('T', ' ');
+}
+
+/*
 generePlateau : Génère un tableau contenant le numéro des cartes à afficher
 sur le plateau de jeu.
 */
@@ -181,8 +188,28 @@ function finPartie(message) {
     console.log("Scores partie : ", scoresPartie);
     // Information à l'utilisateur
     alert(message);
+    // On revient à la page d'accueil
+    window.location.replace('/index.php');
 }
 
+/*
+envoyerScores : Appel la page sauvegarde.php pour sauver les données
+On utilise un appel AJAX vers la page de sauvegarde.
+*/
+function envoyerScores(dates) {
+    var donnees_envoyees = {
+        date_debut: transformeDate(dates[0]),
+        date_fin: transformeDate(dates[1]), // garder un format spécifique
+    }
+    $.ajax({
+        type: "POST",
+        url: "sauvegarde.php",
+        data: donnees_envoyees,
+        success: function(result) {
+            console.log("Retour requête AJAX : " + result);
+        }
+    });
+}
 /*
 jouer : actions entreprises après que le joueur ait choisi une carte.
 Chaque tour il choisit une carte, une deuxième puis on compare.
@@ -210,6 +237,8 @@ function jouer(event) {
                 scoresPartie.push(new Date());
                 // Arrêter le setTimeout de fin de partie
                 clearTimeout(alerteFin);
+                // Envoi des scores à la base de données via une requête POST
+                envoyerScores(scoresPartie);
                 // La partie se termine par une victoire !
                 finPartie("Vous avez GAGN\xC9 !");
             }
