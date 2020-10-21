@@ -5,7 +5,6 @@ session_start();
 
 // Enregistrement des données envoyées par un POST
 if (isset($_POST['date_fin']) && isset($_POST['date_debut']) && isset($_SESSION['pseudonyme'])) {
-
     // Accès à la base de données
     $serveur = "db";
     $utilisateur = "root";
@@ -16,7 +15,7 @@ if (isset($_POST['date_fin']) && isset($_POST['date_debut']) && isset($_SESSION[
     $connexion = new mysqli($serveur, $utilisateur, $mot_de_passe, $base);
 
     if ($connexion->connect_error) {
-        die("Connection failed: " . $connexion->connect_error);
+        die("Échec de connexion : " . $connexion->connect_error);
     }
 
     // Création d'une requête préparée
@@ -38,12 +37,8 @@ if (isset($_POST['date_fin']) && isset($_POST['date_debut']) && isset($_SESSION[
     $requete_inserer_score->close();
 
     // Fermeture de la connexion
-$connexion->close();
-
-}
-else {
-    error_log("ELSE ELSE ELSE", 0);
+    $connexion->close();
+} else {
     header('Location: /index.php');
     exit();
 }
-?>
