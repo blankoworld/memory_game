@@ -30,11 +30,12 @@ var alerteFin = null;           // indicateur lorsque la partie est terminée
 var scoresPartie = [];          // Garder en mémoire les infos de la partie
 
 // Fonctions utiles
-/* 
+/*
 melanger : Mélange un tableau suivant la méthode de Knuth-Fisher-Yates.
 Cf. https://poopcode.com/shuffle-randomize-an-array-in-javascript-using-knuth-fisher-yates-shuffle-algorithm/
 */
-function melanger(tableau) {
+function melanger(tableau)
+{
     var m = tableau.length, temp, i;
 
     // Tant qu'il y a des éléments au tableau
@@ -55,7 +56,8 @@ function melanger(tableau) {
 /*
 transformeDate : transforme les dates en un format compatible avec notre application
 */
-function transformeDate(laDate) {
+function transformeDate(laDate)
+{
     return laDate.toISOString().substring(0, 19).replace('T', ' ');
 }
 
@@ -63,7 +65,8 @@ function transformeDate(laDate) {
 generePlateau : Génère un tableau contenant le numéro des cartes à afficher
 sur le plateau de jeu.
 */
-function generePlateau() {
+function generePlateau()
+{
     /*
     Le jeu étant un jeu de Memory utilisant les doubles, ça fait 14 cartes
     aléatoires à choisir.
@@ -76,7 +79,7 @@ function generePlateau() {
 
     Plusieurs méthodes sont possibles.
 
-    Voici la méthode choisie : 
+    Voici la méthode choisie :
     - on génère un tableau des chiffres de 0 à 17 (18 chiffres), c'est à dire
     le maximum de cartes dont nous disposons
     - on mélange ce tableau
@@ -91,8 +94,8 @@ function generePlateau() {
     let chiffres = [];
     let retenus = [];
     let resultat = [];
-    for(let iterateur = 0; iterateur < maxImages; iterateur++) {
-        /* 
+    for (let iterateur = 0; iterateur < maxImages; iterateur++) {
+        /*
         L'itérateur va de 0 à 17. Mais nos images, dans le CSS, sont nommées
         de 1 à 18.
         Il est donc nécessaire de penser à augmenter de 1 le chiffre obtenu.
@@ -127,7 +130,8 @@ function generePlateau() {
 /*
 retourner : change les propriétés de la carte pour qu'elle change recto/verso
 */
-function retourner(caseId) {
+function retourner(caseId)
+{
     console.log("Doit retourner : ", caseId);
     let element = $("article#" + caseId);
     let image = "recto" + plateau[caseId];
@@ -145,7 +149,8 @@ cartesEgales : compare les cartes de la pioche.
 - si les cartes sont identiques on les laisse affichées (aucun traitement)
 - si différentes on retourne à nouveau les cartes
 */
-function cartesEgales() {
+function cartesEgales()
+{
     /*
     On a seulement le numéro des cases comme référence (1 à 28).
     Le numéro du fruit attaché se trouve dans le tableau `plateau`, à la même
@@ -166,20 +171,22 @@ function cartesEgales() {
 /*
 desactiverCarte : enlève l'événement `onclick` de la case donnée.
 */
-function desactiverCarte(caseId) {
+function desactiverCarte(caseId)
+{
     let element = $("article#" + caseId);
     element.off("click", jouer);
 }
 
 /*
-finPartie : Actions à entreprendre quand la partie se termine : 
+finPartie : Actions à entreprendre quand la partie se termine :
 - désactivation de toutes les cartes (suppression du onClick)
 - arrêt du chronomètre
 - message pour alerter de la fin de partie (si gagné ou perdu)
 */
-function finPartie(message) {
+function finPartie(message)
+{
     // Désactivation de toutes les cartes
-    for(let iterateur = 0; iterateur < plateau.length; iterateur++) {
+    for (let iterateur = 0; iterateur < plateau.length; iterateur++) {
         desactiverCarte(iterateur);
     };
     // Suppression de l'intervalle de rafraîchissement de la progression
@@ -196,19 +203,22 @@ function finPartie(message) {
 envoyerScores : Appel la page sauvegarde.php pour sauver les données
 On utilise un appel AJAX vers la page de sauvegarde.
 */
-function envoyerScores(dates) {
+function envoyerScores(dates)
+{
     var donnees_envoyees = {
         date_debut: transformeDate(dates[0]),
         date_fin: transformeDate(dates[1]), // garder un format spécifique
     }
-    $.ajax({
-        type: "POST",
-        url: "sauvegarde.php",
-        data: donnees_envoyees,
-        success: function(result) {
-            console.log("Retour requête AJAX : " + result);
+    $.ajax(
+        {
+            type: "POST",
+            url: "sauvegarde.php",
+            data: donnees_envoyees,
+            success: function (result) {
+                console.log("Retour requête AJAX : " + result);
+            }
         }
-    });
+    );
 }
 /*
 jouer : actions entreprises après que le joueur ait choisi une carte.
@@ -216,7 +226,8 @@ Chaque tour il choisit une carte, une deuxième puis on compare.
 Si une carte est jouée, nous ne faisons rien de plus.
 Si deux cartes sont jouées : on compare les deux.
 */
-function jouer(event) {
+function jouer(event)
+{
     // Sélection de l'identifiant de la carte (numéro de la case du plateau)
     let numeroCase = event.target.id;
     console.log("Case choisie : ", numeroCase);
@@ -259,22 +270,27 @@ function jouer(event) {
 /*
 afficheChronometre : affiche le chronomètre de la partie.
 */
-function afficheChronometre() {
+function afficheChronometre()
+{
     // affichage initial du chronomètre
-    let progression = $("<progress>", {
-        "class": "barreProgression",
-        max: 100,
-        value: 0,
-    });
+    let progression = $(
+        "<progress>",
+        {
+            "class": "barreProgression",
+            max: 100,
+            value: 0,
+        }
+    );
     progression.appendTo("section#partie");
 }
 
 /*
 augmenteCompteur : augmente le compteur de 1 à 1
 */
-var augmenteCompteur = (function() {
+var augmenteCompteur = (function () {
     let compteur = 0;
-    return function() { compteur += 1; return compteur; };
+    return function () {
+        compteur += 1; return compteur; };
 })();
 
 /*
@@ -283,19 +299,25 @@ On doit prévoir la fin du jeu : il faut créer une alerte au joueur !
 Mais également de créer un événement qui met à jour la barre de progression
 régulièrement.
 */
-function demarreChronometre() {
+function demarreChronometre()
+{
     // Ajout de la date de début de partie aux scores/infos de la partie.
     scoresPartie.push(new Date());
     let nbreSecondes = dureePartie * 60; // nombre de secondes pour la partie
     let dureeMilliemes = nbreSecondes * 1000; // durée de la partie
 
     // Dans X minutes (variable dureePartie) le jeu s'arrête
-    alerteFin = setTimeout(function() {
-        // Au cas où l'intervalle de mise à jour est trop grand
-        $("section#partie progress.barreProgression").attr(
-            "value", 100);
-        finPartie('Vous avez perduuu !');
-    }, dureeMilliemes)
+    alerteFin = setTimeout(
+        function () {
+            // Au cas où l'intervalle de mise à jour est trop grand
+            $("section#partie progress.barreProgression").attr(
+                "value",
+                100
+            );
+            finPartie('Vous avez perduuu !');
+        },
+        dureeMilliemes
+    )
 
     /*
     En fonction de la durée du jeu, il n'est pas nécessaire de faire avancer
@@ -307,41 +329,51 @@ function demarreChronometre() {
     setInterval prend des millièmes, donc on multiplie par 1000.
     */
     let calculNonSavantMaisSavonneux = nbreSecondes / 100 * 1000;
-    /* 
+    /*
     Mise à jour dudit chronomètre. NB : utilisation d'une variable globale
     pour permettre de supprimer l'intervalle plus tard.
     */
-    deroulementPartie = setInterval(function() {
-        $("section#partie progress.barreProgression").attr(
-            "value", augmenteCompteur);
-    }, calculNonSavantMaisSavonneux)
+    deroulementPartie = setInterval(
+        function () {
+            $("section#partie progress.barreProgression").attr(
+                "value",
+                augmenteCompteur
+            );
+        },
+        calculNonSavantMaisSavonneux
+    )
 }
 
 /*
 Nous utilisons ainsi une fonction anonyme (sans nom), exécutée au chargement
 de ce script
 */
-$(function() {
-    /*
-    Objectif : générer le plateau de jeu ; 28 cartes. Ajouter un chronomètre.
-    */
-    plateau = generePlateau();
+$(
+    function () {
+        /*
+        Objectif : générer le plateau de jeu ; 28 cartes. Ajouter un chronomètre.
+        */
+        plateau = generePlateau();
 
-    // On génère le plateau en HTML avec les images retenues pour les cartes
-    for(let iterateur = 0; iterateur < plateau.length; iterateur++) {
-        // création de la carte
-        let carte = $("<article>", {
-            "id": iterateur,
-            "class": "carte ".concat(faceInitiale)
-        })
-        // ajout d'un évènement sur la carte
-        carte.on("click", jouer);
-        // ajout de la carte sur le plateau
-        carte.appendTo("section#principale");
-    };
+        // On génère le plateau en HTML avec les images retenues pour les cartes
+        for (let iterateur = 0; iterateur < plateau.length; iterateur++) {
+            // création de la carte
+            let carte = $(
+                "<article>",
+                {
+                    "id": iterateur,
+                    "class": "carte ".concat(faceInitiale)
+                }
+            )
+            // ajout d'un évènement sur la carte
+            carte.on("click", jouer);
+            // ajout de la carte sur le plateau
+            carte.appendTo("section#principale");
+        };
 
-    // On affiche un chronomètre
-    afficheChronometre();
-    // On débute la partie avec le chronomètre
-    demarreChronometre();
-});
+        // On affiche un chronomètre
+        afficheChronometre();
+        // On débute la partie avec le chronomètre
+        demarreChronometre();
+    }
+);
