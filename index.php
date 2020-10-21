@@ -54,7 +54,7 @@ if ($reponse = $connexion->query($requete_derniers_scores)) {
 Quand l'utilisateur joue la première fois, on garde son pseudonyme dans un
 cookie. Si c'est le cas, on réutilise son pseudonyme.
 */
-$pseudo_par_defaut = isset($_COOKIE['pseudonyme']) ? $_COOKIE['pseudonyme'] : 'votrePseudo';
+$pseudo_par_defaut = isset($_COOKIE['pseudonyme']) ? htmlspecialchars($_COOKIE['pseudonyme']) : 'votrePseudo';
 ?>
 
     <section id="principale">
