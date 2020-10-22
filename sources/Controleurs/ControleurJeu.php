@@ -1,11 +1,26 @@
 <?php
 
+/**
+ * Ensemble des contrôleurs de jeu pour l'application Memory.
+ */
+
 namespace Blankoworld\Memory\Controleurs;
 
 use Blankoworld\Memory\Modeles\GestionScores;
 
+/**
+ * Cette classe va permettre de gérer les pages de l'application :
+ * - l'accueil
+ * - le jeu Memory
+ * - la sauvegarde d'une partie
+ */
 class ControleurJeu
 {
+    /**
+     * Affichage de la page d'accueil
+     *
+     * @return string Page d'accueil (HTML)
+     */
     public function accueil()
     {
         // récupération des meilleurs scores
@@ -16,24 +31,30 @@ class ControleurJeu
         $pseudo_par_defaut = isset($_COOKIE['pseudonyme']) ? htmlspecialchars($_COOKIE['pseudonyme']) : 'votrePseudo';
 
         // Affichage du rendu en utilisant `Plates`
-        $templates = new \League\Plates\Engine(__DIR__ . '/../Vues');
-        echo $templates->render(
-            'accueil', [
+        $vue = new \League\Plates\Engine(__DIR__ . '/../Vues');
+        echo $vue->render(
+            'accueil',
+            [
             'pseudo_par_defaut' => $pseudo_par_defaut,
             'scores' => $scores
             ]
         );
     }
 
+    /**
+     * Affichage de la page contenant le jeu de Memory
+     *
+     * @param string $pseudonyme Le pseudonyme du joueur
+     *
+     * @return string Page du jeu (HTML)
+     */
     public function jeu($pseudonyme = null)
     {
-        // Variables pour le gabarit
-        $script_js = 'memory.js';
-
         /*
-        Pseudonyme :
-        - on utilise un cookie pour pré-remplir le champ la prochaine fois qu'on vient sur le site
-        - on utilise la session pour transmettre la donnée entre les pages
+        Pseudonyme : pour faciliter la saisie à la prochaine visite on garde
+        l'information dans un cookie.
+        En revanche on utilisera la session pour transmettre l'information à
+        notre application.
         */
         if ($pseudonyme) {
             // Cookie : pour le formulaire d'index.php
@@ -41,15 +62,29 @@ class ControleurJeu
             // Session : pour les pages PHP suivantes
             $_SESSION['pseudonyme'] = $pseudonyme;
         } else {
+            // Ceci est une manière de créer une redirection vers une autre URL
             header('Location: /index.php');
             exit();
         }
 
+        // Variables pour la vue
+        $script_js = 'memory.js';
         // Affichage du rendu en utilisant `Plates`
-        $templates = new \League\Plates\Engine(__DIR__ . '/../Vues');
-        echo $templates->render('jeu', ['script_js' => $script_js]);
+        $vue = new \League\Plates\Engine(__DIR__ . '/../Vues');
+        echo $vue->render('jeu', ['script_js' => $script_js]);
     }
 
+    /**
+     * Sauve la partie en base de données
+     *
+     * @param string $pseudonyme Pseudonyme du joueur
+     *
+     * @param string $debut Date de début de la partie. Format YYYY-MM-SS H:i:s
+     *
+     * @param string $fin Date de fin de la partie. Format YYYY-MM-SS H:i:s
+     *
+     * @return void
+     */
     public function sauvegardePartie($pseudonyme, $debut, $fin)
     {
         $gestion_des_scores = new GestionScores();

@@ -1,11 +1,23 @@
 <?php
 
+/**
+ * Ensemble des modèles utilisés pour le jeu de l'application Memory
+ */
+
 namespace Blankoworld\Memory\Modeles;
 
 use mysqli;
 
+/**
+ * Classe de gestion des scores : affichage et enregistrement dans la base.
+ */
 class GestionScores
 {
+    /**
+     * Les 10 meilleurs scores
+     *
+     * @return array Scores ayant 2 champs : pseudo et diff (durée de partie)
+     */
     public function meilleursScores()
     {
         $meilleurs_scores = array();
@@ -26,6 +38,17 @@ SQL;
         return $meilleurs_scores;
     }
 
+    /**
+     * Ajoute un score dans le tableau des scores
+     *
+     * @param string $pseudo Pseudonyme du joueur
+     *
+     * @param string $debut Date de début du jeu. Format YYYY-MM-SS H:i:s
+     *
+     * @param string $fin Date de fin du jeu. Format YYYY-MM-SS H:i:s
+     *
+     * @return bool Résultat de la requête SQL
+     */
     public function ajouteScore($pseudo, $debut, $fin)
     {
         $requete_sql = <<<SQL
@@ -45,6 +68,11 @@ SQL;
         return $resultat;
     }
 
+    /**
+     * Connexion à la base de données
+     *
+     * @return Object Objet mysqli de la connexion
+     */
     private function connexionBDD()
     {
         // Données de connexion
@@ -58,6 +86,7 @@ SQL;
         if ($connexion->connect_error) {
             die("Échec de connexion : " . $connexion->connect_error);
         }
+        // On retourne l'objet de connexion
         return $connexion;
     }
 }

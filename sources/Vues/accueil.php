@@ -10,6 +10,8 @@
             <?php endforeach ?>
         </ol>
     </section>
+
+    <!-- Formulaire d'inscription au jeu -->
     <form method="post" action="index.php?action=jeu">
         <input type="text" name="pseudonyme" value="<?= $this->e($pseudo_par_defaut) ?>"/>
         <input type="submit" value="Jouer&nbsp;!" />
