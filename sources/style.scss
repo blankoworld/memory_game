@@ -1,21 +1,41 @@
+/*
+    En SASS on peut utiliser des variables.
+    Cela nous sera utile pour le calcul de la largeur du plateau de jeu par ex.
+*/
+$largeur_carte: 100;
+$hauteur_carte: $largeur_carte;
+$nbre_cartes: 7;
+$espacement_carte: 8; 
+$largeur_contenu: $nbre_cartes * ($largeur_carte + $espacement_carte);
+
 section#entete {
     text-align: center;
 }
 
 /* Notre espace de jeu
 Note: tout élément (par exemple article.carte) sera précédé de
-`section#principale` dans le CSS final.
+`section#principale` dans le CSS final. Ces éléments sont dits `nesting`.
 */
 section#principale {
-    width: 760px;
+    width: #{$largeur_contenu}px;
     margin: 0 auto;
+
+    section#scores {
+        text-align: center;
+
+        // On enlève cet effet de liste à puce
+        ol {
+            list-style-type: none;
+            margin-left: -25px;
+        }
+    }
 
     /* La carte à jouer */
     article.carte {
         display: inline-block;
-        height: 100px;
-        width: 100px;
-        margin-left: 8px;
+        height: #{$hauteur_carte}px;
+        width: #{$largeur_carte}px;
+        margin-left: #{$espacement_carte}px;
         /* On arrondi les bords :) */
         -moz-border-radius: 10px;       // mozilla
         border-radius: 10px;            // `normal`
@@ -40,79 +60,19 @@ section#principale {
         }
     }
 
-    /* On décompose l'image cards.png pour extraire chaque fruit */
-    article.recto1 {
-        background-position: 0 0px;
+    /*
+    On décompose l'image cards.png pour extraire chaque fruit.
+    Comme il y a répétition du CSS avec peu de changements, on va utiliser @for
+    */
+    @for $i from 0 to 17 {
+        article.recto#{$i} {
+            background-position: 0 #{$hauteur_carte * -1 * $i}px;
+        }
     }
-
-    article.recto2 {
-        background-position: 0 -100px;
+    
+    form {
+        text-align: center;
     }
-
-    article.recto3 {
-        background-position: 0 -200px;
-    }
-
-    article.recto4 {
-        background-position: 0 -300px;
-    }
-
-    article.recto5 {
-        background-position: 0 -400px;
-    }
-
-    article.recto6 {
-        background-position: 0 -500px;
-    }
-
-    article.recto7 {
-        background-position: 0 -600px;
-    }
-
-    article.recto8 {
-        background-position: 0 -700px;
-    }
-
-    article.recto9 {
-        background-position: 0 -800px;
-    }
-
-    article.recto10 {
-        background-position: 0 -900px;
-    }
-
-    article.recto11 {
-        background-position: 0 -1000px;
-    }
-
-    article.recto12 {
-        background-position: 0 -1100px;
-    }
-
-    article.recto13 {
-        background-position: 0 -1200px;
-    }
-
-    article.recto14 {
-        background-position: 0 -1300px;
-    }
-
-    article.recto15 {
-        background-position: 0 -1400px;
-    }
-
-    article.recto16 {
-        background-position: 0 -1500px;
-    }
-
-    article.recto17 {
-        background-position: 0 -1600px;
-    }
-
-    article.recto18 {
-        background-position: 0 -1700px;
-    }
-
 }
 
 // Espace pour informer de la progression de la partie
@@ -121,7 +81,7 @@ section#partie {
 
     progress.barreProgression {
         height: 1.5em;
-        width: 721px;
+        width: #{$largeur_contenu - $nbre_cartes*5}px;
         background-color: gray;
     }
 }
