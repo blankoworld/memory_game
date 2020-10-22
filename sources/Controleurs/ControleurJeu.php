@@ -12,39 +12,23 @@ class ControleurJeu
         $gestion_des_scores = new GestionScores();
         $scores = $gestion_des_scores->meilleursScores();
 
-        // choix d'un titre pour la page
-        $titre_page = 'Accueil';
         // récupération du pseudonyme
         $pseudo_par_defaut = isset($_COOKIE['pseudonyme']) ? htmlspecialchars($_COOKIE['pseudonyme']) : 'votrePseudo';
 
-        // création du contenu
-        $contenu = '<section id="scores">';
-        // On affiche les 10 derniers scores
-        if ($scores) {
-            $contenu .= "\t\t<ol>";
-            foreach ($scores as $score) {
-                $contenu .= "\n\t\t\t<li>" . $score['pseudo'] . ' ' . $score['diff'] . '</li>';
-            }
-            $contenu .= "\n\t\t</ol>";
-        }
-        $contenu .= "</section>";
-        // Préparation du contenu de la page (un formulaire pour insérer le pseudo)
-        $contenu .= <<<HTML
-            <form method="post" action="index.php?action=jeu">
-                <input type="text" name="pseudonyme" value="$pseudo_par_defaut"/>
-                <input type="submit" value="Jouer&nbsp;!" />
-            </form>
-        HTML;
-
-        require(__DIR__ . '/../Vues/principal.php');
+        // Affichage du rendu en utilisant `Plates`
+        $templates = new \League\Plates\Engine(__DIR__ . '/../Vues');
+        echo $templates->render(
+            'accueil', [
+            'pseudo_par_defaut' => $pseudo_par_defaut,
+            'scores' => $scores
+            ]
+        );
     }
 
     public function jeu($pseudonyme = null)
     {
         // Variables pour le gabarit
-        $titre_page = 'Le jeu';
         $script_js = 'memory.js';
-        $affiche_chronometre = true;
 
         /*
         Pseudonyme :
@@ -61,7 +45,9 @@ class ControleurJeu
             exit();
         }
 
-        require(__DIR__ . '/../Vues/principal.php');
+        // Affichage du rendu en utilisant `Plates`
+        $templates = new \League\Plates\Engine(__DIR__ . '/../Vues');
+        echo $templates->render('jeu', ['script_js' => $script_js]);
     }
 
     public function sauvegardePartie($pseudonyme, $debut, $fin)

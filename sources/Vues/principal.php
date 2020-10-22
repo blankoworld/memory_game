@@ -3,29 +3,14 @@
 <head>
     <!-- Ceci est un commentaire HTML.
         Nous l'utiliserons pour détailler notre code HTML. -->
-    <title>Memory
-<?= $title = isset($titre_page) ? ' - ' . $titre_page : ''; ?></title>
+    <title>Memory<?= $this->e($titre_page) ?></title>
 
     <!-- Feuille de style à utiliser pour la mise en forme -->
     <link rel="stylesheet" href="memory.css">
 
-<?php
-if (isset($script_js)) {
-    ?>
-    <!-- Utilisation d'un site externe pour inclure Jquery.
-        Notez le `defer` qui indique de charger tout ça à la fin du chargement
-        complet de la page. -->
-    <script
-        src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-        crossorigin="anonymous" defer></script>
-    <!-- Puis nous utilisons notre propre fichier JS pour le code de 
-        l'application -->
-    <script src="<?php echo $script_js ?>" defer></script>
-    <?php
-}
-?>
-
+<?php if ($this->section('script_js')) : ?>
+    <?= $this->section('script_js') ?>
+<?php endif ?>
 </head>
 <body>
 
@@ -40,18 +25,14 @@ if (isset($script_js)) {
         encore pour le plateau de jeu.
         Notre code Javascript ajoutera les cartes de jeu. -->
     <section id="principale">
-        <?= $contenu ?>
+<?php if ($this->section('contenu')) : ?>
+    <?= $this->section('contenu') ?>
+<?php endif ?>
     </section>
 
-<?php
-if ($affiche_chronometre) {
-    ?>
-    <!-- Progression de la partie -->
-    <section id="partie">
-        <p id="chrono"></p>
-    </section>
-    <?php
-}
-?>
+<?php if ($this->section('chronometre')) : ?>
+    <?= $this->section('chronometre') ?>
+<?php endif ?>
+
     </body>
 </html>

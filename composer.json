@@ -6,5 +6,8 @@
         "psr-4": {
             "Blankoworld\\Memory\\": "sources"
         }
+    },
+    "require": {
+        "league/plates": "^3.3"
     }
 }

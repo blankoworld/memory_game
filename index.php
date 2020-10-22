@@ -1,7 +1,7 @@
 <?php
 
 /*
-PSR-4: chargement automatique de nos fichiers (Cf. autoloader dans 
+PSR-4: chargement automatique de nos fichiers (Cf. autoloader dans
 composer.yml)
 */
 require_once __DIR__ . '/vendor/autoload.php';
@@ -19,7 +19,7 @@ $controleur = new ControleurJeu();
 if (isset($_GET['action'])) {
     switch (htmlspecialchars($_GET['action'])) {
         case 'jeu':
-            $pseudonyme = NULL;
+            $pseudonyme = null;
             if (isset($_POST['pseudonyme'])) {
                 $pseudonyme = htmlspecialchars($_POST['pseudonyme']);
             }
@@ -27,9 +27,11 @@ if (isset($_GET['action'])) {
             break;
 
         case 'sauvegarde':
-            if (isset($_POST['date_fin']) && 
-                isset($_POST['date_debut']) && 
-                    isset($_SESSION['pseudonyme'])) {
+            if (
+                isset($_POST['date_fin']) &&
+                isset($_POST['date_debut']) &&
+                    isset($_SESSION['pseudonyme'])
+            ) {
                 $controleur->sauvegardePartie(
                     $_SESSION['pseudonyme'],
                     htmlspecialchars($_POST['date_debut']),
