@@ -6,7 +6,7 @@ services:
     ports:
       - "8888:80"
     volumes:
-      - ./sources:/var/www/html
+      - ./:/var/www/html
 
   db:
     image: mysql

@@ -28,6 +28,7 @@ var nbreReussites = 0;          // nombre de doubles trouvés par le joueur
 var deroulementPartie = null;   // outil de rafraîchissement de la prograssion
 var alerteFin = null;           // indicateur lorsque la partie est terminée
 var scoresPartie = [];          // Garder en mémoire les infos de la partie
+var urlSauvegarde = '/index.php?action=sauvegarde'
 
 // Fonctions utiles
 /*
@@ -212,7 +213,7 @@ function envoyerScores(dates)
     $.ajax(
         {
             type: "POST",
-            url: "sauvegarde.php",
+            url: urlSauvegarde,
             data: donnees_envoyees,
             success: function (result) {
                 console.log("Retour requête AJAX : " + result);
